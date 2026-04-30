@@ -105,6 +105,59 @@ make ci
 - `make test`
 - `make ci`
 
+## Docker Deployment
+
+1) `.env` を用意（必要なら `.env.example` から作成）:
+
+```bash
+cp .env.example .env
+```
+
+2) ポート競合を確認して起動:
+
+```bash
+make preflight-ports
+make docker-up
+```
+
+3) 動作確認:
+
+```bash
+curl http://127.0.0.1:${GTQ_API_PORT:-18000}/tasks
+curl -X POST "http://127.0.0.1:${GTQ_API_PORT:-18000}/mcp/submit?prompt=hello"
+```
+
+4) 停止:
+
+```bash
+make docker-down
+```
+
+### ポート競合対処
+
+- 競合時は `preflight_ports.sh` が起動を中止します。
+- `.env` の `GTQ_API_PORT` を変更して再実行してください。
+
+## macOS 起動時の自動起動（launchd + restart policy）
+
+`docker-compose.yml` 側で `restart: unless-stopped` を設定済みです。  
+さらにログイン時に `docker compose up -d` を起動するには:
+
+```bash
+make autostart-install
+```
+
+アンインストール:
+
+```bash
+make autostart-uninstall
+```
+
+ログ:
+
+- `scripts/dev/launchd.stdout.log`
+- `scripts/dev/launchd.stderr.log`
+
 ## Project Layout
 
 ```text
