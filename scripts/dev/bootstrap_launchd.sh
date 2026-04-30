@@ -3,15 +3,18 @@ set -euo pipefail
 
 MODE="${1:-install}"
 LABEL="com.genaitaskq.autostart"
-LAUNCH_AGENTS_DIR="${HOME}/Library/LaunchAgents"
+LAUNCH_AGENTS_DIR="${GTQ_LAUNCH_AGENTS_DIR:-${HOME}/Library/LaunchAgents}"
 PLIST_PATH="${LAUNCH_AGENTS_DIR}/${LABEL}.plist"
 TEMPLATE_PATH="$(cd "$(dirname "$0")" && pwd)/com.genaitaskq.autostart.plist.template"
-WORKDIR="$(cd "$(dirname "$0")/../.." && pwd)"
+WORKDIR="${GTQ_WORKDIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
+DRY_RUN="${GTQ_LAUNCHD_DRY_RUN:-0}"
 
 mkdir -p "${LAUNCH_AGENTS_DIR}"
 
 if [[ "${MODE}" == "uninstall" ]]; then
-  launchctl bootout "gui/$(id -u)" "${PLIST_PATH}" >/dev/null 2>&1 || true
+  if [[ "${DRY_RUN}" != "1" ]]; then
+    launchctl bootout "gui/$(id -u)" "${PLIST_PATH}" >/dev/null 2>&1 || true
+  fi
   rm -f "${PLIST_PATH}"
   echo "launchd: uninstalled ${LABEL}"
   exit 0
@@ -33,9 +36,11 @@ sed \
   -e "s#/usr/local/bin/docker#${DOCKER_BIN}#g" \
   "${TEMPLATE_PATH}" > "${PLIST_PATH}"
 
-launchctl bootout "gui/$(id -u)" "${PLIST_PATH}" >/dev/null 2>&1 || true
-launchctl bootstrap "gui/$(id -u)" "${PLIST_PATH}"
-launchctl enable "gui/$(id -u)/${LABEL}"
-launchctl kickstart -k "gui/$(id -u)/${LABEL}"
+if [[ "${DRY_RUN}" != "1" ]]; then
+  launchctl bootout "gui/$(id -u)" "${PLIST_PATH}" >/dev/null 2>&1 || true
+  launchctl bootstrap "gui/$(id -u)" "${PLIST_PATH}"
+  launchctl enable "gui/$(id -u)/${LABEL}"
+  launchctl kickstart -k "gui/$(id -u)/${LABEL}"
+fi
 
 echo "launchd: installed ${LABEL} at ${PLIST_PATH}"
