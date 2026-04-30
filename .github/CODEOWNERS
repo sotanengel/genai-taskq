@@ -1,0 +1,4 @@
+/src/genai_taskq/core/ @core-owner
+/src/genai_taskq/storage/ @storage-owner
+/src/genai_taskq/providers/ @provider-owner
+/src/genai_taskq/api/ @api-owner
