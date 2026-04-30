@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.genaitaskq.autostart</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-lc</string>
+    <string>cd __WORKDIR__ &amp;&amp; if [ -f .env ]; then set -a &amp;&amp; source .env &amp;&amp; set +a; fi &amp;&amp; ./scripts/dev/preflight_ports.sh &amp;&amp; /usr/local/bin/docker compose up -d</string>
+  </array>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>KeepAlive</key>
+  <false/>
+
+  <key>StandardOutPath</key>
+  <string>__WORKDIR__/scripts/dev/launchd.stdout.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>__WORKDIR__/scripts/dev/launchd.stderr.log</string>
+</dict>
+</plist>
