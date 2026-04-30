@@ -44,5 +44,5 @@ class Task:
         return self.attempts < self.max_retries
 
     def retry_after(self) -> datetime:
-        delay = self.backoff_base_sec**max(self.attempts, 1)
+        delay = self.backoff_base_sec ** max(self.attempts, 1)
         return datetime.now(UTC) + timedelta(seconds=delay)

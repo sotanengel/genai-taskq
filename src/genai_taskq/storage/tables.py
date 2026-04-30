@@ -28,7 +28,9 @@ class TaskRow(Base):
     provider: Mapped[str] = mapped_column(String(64), default="mock")
     output: Mapped[str | None] = mapped_column(Text(), nullable=True)
     error: Mapped[str | None] = mapped_column(Text(), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(UTC)
+    )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=lambda: datetime.now(UTC),
@@ -47,7 +49,9 @@ class SessionRow(Base):
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     name: Mapped[str] = mapped_column(String(128))
     summary: Mapped[str | None] = mapped_column(Text(), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(UTC)
+    )
 
 
 class ArtifactRow(Base):
@@ -58,7 +62,9 @@ class ArtifactRow(Base):
     uri: Mapped[str] = mapped_column(Text())
     sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
     bytes: Mapped[int | None] = mapped_column(Integer, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(UTC)
+    )
 
 
 class EventRow(Base):
@@ -68,4 +74,6 @@ class EventRow(Base):
     level: Mapped[str] = mapped_column(String(16), default="info")
     type: Mapped[str] = mapped_column(String(64))
     payload: Mapped[str | None] = mapped_column(Text(), nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=lambda: datetime.now(UTC)
+    )

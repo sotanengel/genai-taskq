@@ -3,7 +3,12 @@ from __future__ import annotations
 from genai_taskq.core.models import FINAL_STATES, TaskState
 
 ALLOWED_TRANSITIONS: dict[TaskState, set[TaskState]] = {
-    TaskState.PENDING: {TaskState.SCHEDULED, TaskState.BLOCKED, TaskState.RUNNING, TaskState.CANCELED},
+    TaskState.PENDING: {
+        TaskState.SCHEDULED,
+        TaskState.BLOCKED,
+        TaskState.RUNNING,
+        TaskState.CANCELED,
+    },
     TaskState.SCHEDULED: {TaskState.PENDING, TaskState.RUNNING, TaskState.CANCELED},
     TaskState.BLOCKED: {TaskState.PENDING, TaskState.CANCELED},
     TaskState.RUNNING: {TaskState.SUCCEEDED, TaskState.FAILED, TaskState.CANCELED},

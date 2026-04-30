@@ -78,7 +78,9 @@ class TaskRepository:
             db.add(TaskDependencyRow(task_id=task_id, depends_on_task_id=depends_on_task_id))
             db.commit()
 
-    def transition(self, task_id: str, nxt: TaskState, error: str | None = None, output: str | None = None) -> Task:
+    def transition(
+        self, task_id: str, nxt: TaskState, error: str | None = None, output: str | None = None
+    ) -> Task:
         with SessionLocal() as db:
             row = db.get(TaskRow, task_id)
             if row is None:
@@ -89,7 +91,11 @@ class TaskRepository:
             row.output = output
             row.updated_at = datetime.now(UTC)
             db.commit()
-            db.add(EventRow(id=str(uuid4()), task_id=task_id, type=f"task.state.{nxt.value}", payload=error))
+            db.add(
+                EventRow(
+                    id=str(uuid4()), task_id=task_id, type=f"task.state.{nxt.value}", payload=error
+                )
+            )
             db.commit()
             db.refresh(row)
             return _to_task(row)
@@ -100,18 +106,22 @@ class TaskRepository:
     def dequeue(self, owner: str, lease_seconds: int = 30) -> Task | None:
         now = datetime.now(UTC)
         with SessionLocal() as db:
-            rows = db.execute(
-                select(TaskRow)
-                .where(
-                    and_(
-                        TaskRow.state.in_([TaskState.PENDING.value, TaskState.SCHEDULED.value]),
-                        or_(TaskRow.run_after.is_(None), TaskRow.run_after <= now),
-                        or_(TaskRow.lease_until.is_(None), TaskRow.lease_until < now),
+            rows = (
+                db.execute(
+                    select(TaskRow)
+                    .where(
+                        and_(
+                            TaskRow.state.in_([TaskState.PENDING.value, TaskState.SCHEDULED.value]),
+                            or_(TaskRow.run_after.is_(None), TaskRow.run_after <= now),
+                            or_(TaskRow.lease_until.is_(None), TaskRow.lease_until < now),
+                        )
                     )
+                    .order_by(asc(TaskRow.priority), asc(TaskRow.created_at))
+                    .limit(1)
                 )
-                .order_by(asc(TaskRow.priority), asc(TaskRow.created_at))
-                .limit(1)
-            ).scalars().all()
+                .scalars()
+                .all()
+            )
             if not rows:
                 return None
             row = rows[0]
