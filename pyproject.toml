@@ -1,0 +1,53 @@
+[project]
+name = "genai-taskq"
+version = "0.1.0"
+description = "Persistent task queue for GenAI workflows"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi>=0.115.0",
+  "uvicorn>=0.35.0",
+  "sqlalchemy>=2.0.40",
+  "pydantic>=2.11.0",
+  "typer>=0.16.0",
+  "httpx>=0.28.0",
+  "structlog>=25.4.0",
+  "prometheus-client>=0.22.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.0",
+  "pytest-asyncio>=0.26.0",
+  "mypy>=1.15.0",
+  "ruff>=0.11.0",
+]
+postgres = [
+  "psycopg[binary]>=3.2.0",
+]
+
+[project.scripts]
+gtq = "genai_taskq.cli.main:app"
+gtq-worker = "genai_taskq.worker.main:run_worker_cli"
+
+[build-system]
+requires = ["setuptools>=69.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["genai_taskq"]
