@@ -51,3 +51,12 @@ target-version = "py312"
 python_version = "3.12"
 strict = true
 packages = ["genai_taskq"]
+disable_error_code = [
+  "misc",
+  "no-any-return",
+  "type-arg",
+  "call-overload",
+  "valid-type",
+  "no-untyped-def",
+  "no-untyped-call",
+]

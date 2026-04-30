@@ -8,7 +8,9 @@ class GTQClient:
         self.base_url = base_url.rstrip("/")
         self.client = httpx.Client(timeout=30.0)
 
-    def submit(self, prompt: str, provider: str = "mock", idempotency_key: str | None = None) -> dict:
+    def submit(
+        self, prompt: str, provider: str = "mock", idempotency_key: str | None = None
+    ) -> dict:
         res = self.client.post(
             f"{self.base_url}/tasks",
             json={
@@ -31,7 +33,9 @@ class AsyncGTQClient:
         self.base_url = base_url.rstrip("/")
         self.client = httpx.AsyncClient(timeout=30.0)
 
-    async def submit(self, prompt: str, provider: str = "mock", idempotency_key: str | None = None) -> dict:
+    async def submit(
+        self, prompt: str, provider: str = "mock", idempotency_key: str | None = None
+    ) -> dict:
         res = await self.client.post(
             f"{self.base_url}/tasks",
             json={

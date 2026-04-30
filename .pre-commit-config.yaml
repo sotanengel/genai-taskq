@@ -14,5 +14,6 @@ repos:
     hooks:
       - id: pytest-unit
         name: pytest-unit
-        entry: pytest -q tests/unit -x
+        entry: bash -lc '.venv/bin/python -m pytest -q tests/unit -x || python3 -m pytest -q tests/unit -x'
         language: system
+        pass_filenames: false
